@@ -8,8 +8,8 @@ from langchain.llms import OpenAI
 from typing import Union, List, Dict
 import openai
 
-os.environ["OPENAI_API_KEY"] = "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"
-openai.api_key = "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"
+#os.environ["OPENAI_API_KEY"] = "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"
+#openai.api_key = "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"
 
 class Agent:
     def __init__(self, openai_api_key: Union[str, None] = None) -> None:

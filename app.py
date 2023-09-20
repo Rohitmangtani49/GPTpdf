@@ -46,8 +46,7 @@ def is_openai_api_key_set() -> bool:
 def main():
     if len(st.session_state) == 0:
         st.session_state["messages"] = []
-        #st.session_state["OPENAI_API_KEY"] = os.environ.get("OPENAI_API_KEY", "")
-        st.session_state["OPENAI_API_KEY"] = "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"
+        st.session_state["OPENAI_API_KEY"] = os.environ.get("OPENAI_API_KEY", "")
         if is_openai_api_key_set():
             st.session_state["agent"] = Agent(st.session_state["OPENAI_API_KEY"])
         else:
@@ -55,17 +54,17 @@ def main():
 
     st.header("ChatPDF")
 
-    #if st.text_input("OpenAI API Key", value=st.session_state["OPENAI_API_KEY"], key="input_OPENAI_API_KEY", type="password"):
-       #if (
-            #len(st.session_state["input_OPENAI_API_KEY"]) > 0
-            #and st.session_state["input_OPENAI_API_KEY"] != st.session_state["OPENAI_API_KEY"]
-        #):
-            #st.session_state["OPENAI_API_KEY"] = st.session_state["input_OPENAI_API_KEY"]
-            #if st.session_state["agent"] is not None:
-            #    st.warning("Please, upload the files again.")
-            #st.session_state["messages"] = []
-            #st.session_state["user_input"] = ""
-            #st.session_state["agent"] = Agent(st.session_state["OPENAI_API_KEY"])
+    if st.text_input("OpenAI API Key", value=st.session_state["OPENAI_API_KEY"], key="input_OPENAI_API_KEY", type="password"):
+        if (
+            len(st.session_state["input_OPENAI_API_KEY"]) > 0
+            and st.session_state["input_OPENAI_API_KEY"] != st.session_state["OPENAI_API_KEY"]
+        ):
+            st.session_state["OPENAI_API_KEY"] = st.session_state["input_OPENAI_API_KEY"]
+            if st.session_state["agent"] is not None:
+                st.warning("Please, upload the files again.")
+            st.session_state["messages"] = []
+            st.session_state["user_input"] = ""
+            st.session_state["agent"] = Agent(st.session_state["OPENAI_API_KEY"])
 
     st.subheader("Upload a document")
     st.file_uploader(
@@ -75,7 +74,7 @@ def main():
         on_change=read_and_save_file,
         label_visibility="collapsed",
         accept_multiple_files=True,
-        disabled=False
+        disabled=not is_openai_api_key_set(),
     )
 
     st.session_state["ingestion_spinner"] = st.empty()
@@ -84,6 +83,7 @@ def main():
     st.text_input("Message", key="user_input", disabled=not is_openai_api_key_set(), on_change=process_input)
 
     st.divider()
+
 
 if __name__ == "__main__":
     main()
